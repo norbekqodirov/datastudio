@@ -1,0 +1,723 @@
+﻿<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATA Interaktiv Studiyasi - Ta'lim uchun vizual yechimlar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            dark: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #0ea5e9, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-pattern {
+            background-color: #0f172a;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231e293b' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-800 bg-slate-50">
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 glass-effect border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <img src="{{ url_for('static', filename='logo.svg') }}" alt="DATA Studio" class="h-10 w-auto">
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#xizmatlar" class="text-slate-600 hover:text-brand-600 font-medium transition">Xizmatlar</a>
+                    <a href="#portfolio" class="text-slate-600 hover:text-brand-600 font-medium transition">Portfel</a>
+                    <a href="#jarayon" class="text-slate-600 hover:text-brand-600 font-medium transition">Jarayon</a>
+                    <a href="#narxlar" class="text-slate-600 hover:text-brand-600 font-medium transition">Narxlar</a>
+                    <a href="#faq" class="text-slate-600 hover:text-brand-600 font-medium transition">Savollar</a>
+                </nav>
+
+                <!-- CTA Button -->
+                <div class="hidden md:flex items-center">
+                    <a href="#aloqa" class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-full font-medium transition shadow-lg shadow-brand-500/30 flex items-center gap-2">
+                        <span>Bepul konsultatsiya</span>
+                        <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-brand-600 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 absolute w-full">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#xizmatlar" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-slate-50">Xizmatlar</a>
+                <a href="#portfolio" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-slate-50">Portfel</a>
+                <a href="#jarayon" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-slate-50">Jarayon</a>
+                <a href="#narxlar" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-brand-600 hover:bg-slate-50">Narxlar</a>
+                <a href="#aloqa" class="block w-full text-center mt-4 bg-brand-600 text-white px-5 py-3 rounded-lg font-bold">Konsultatsiya olish</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden hero-pattern text-white">
+        <div class="absolute inset-0 bg-gradient-to-b from-brand-900/90 to-slate-900/95"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-12">
+            <div class="lg:w-1/2 text-center lg:text-left z-10">
+                <div class="inline-block px-4 py-1.5 bg-brand-500/20 rounded-full border border-brand-500/30 text-brand-300 font-semibold text-sm mb-6 uppercase tracking-wider">
+                    Ta'limni ko'rsatish emas, tushuntirish san'ati
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+                    Ta'lim uchun <span class="text-brand-400">kontent, video</span> va interaktiv yechimlar
+                </h1>
+                <p class="text-lg md:text-xl text-slate-300 mb-8 leading-relaxed">
+                    DATA Interaktiv Studiyasi — darsni tushuntirishni tezlashtiramiz, o'quvchini qiziqtiramiz va o'qituvchi ishini yengillashtiramiz.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#aloqa" class="bg-brand-500 hover:bg-brand-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-xl shadow-brand-500/20">
+                        Konsultatsiya olish
+                    </a>
+                    <a href="#portfolio" class="bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm border border-white/20 px-8 py-4 rounded-xl font-bold text-lg transition flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-circle-play"></i> Portfelni ko'rish
+                    </a>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-slate-400 border-t border-white/10 pt-8">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check text-brand-400"></i> Ta'limga ixtisoslashgan
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check text-brand-400"></i> Video + Motion + VR
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check text-brand-400"></i> Metodika bilan uyg'un
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check text-brand-400"></i> Real ishlovchi model
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Image / Visual -->
+            <div class="lg:w-1/2 relative z-10">
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-slate-800/50 group">
+                    <!-- O'zingizning studiya rasmingizni shu yerga qo'ying. Hozircha unsplash -->
+                    <img src="{{ url_for('static', filename='studio.png') }}" alt="DATA Studio Jarayoni" class="w-full h-auto transform group-hover:scale-105 transition duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
+                        <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20">
+                            <p class="text-white font-bold">Professional Studiya</p>
+                            <p class="text-slate-300 text-sm">Toshkentdagi eng zamonaviy yechimlar</p>
+                        </div>
+                    </div>
+
+                    <!-- Floating Badge -->
+                    <div class="absolute top-6 right-6 bg-brand-600 text-white p-3 rounded-lg shadow-lg animate-bounce">
+                        <i class="fa-solid fa-video mr-2"></i> 4K Format
+                    </div>
+                </div>
+                <!-- Decorative Elements -->
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-500 rounded-full blur-3xl opacity-30"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-500 rounded-full blur-3xl opacity-30"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Proposition (Biz nima qilamiz) -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-base text-brand-600 font-semibold tracking-wide uppercase">Bizning taklif</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+                    Ta'limni kontentga aylantiramiz
+                </p>
+                <p class="mt-4 max-w-2xl text-xl text-slate-500 mx-auto">
+                    Natijaga ishlaydigan eng zamonaviy formatlar
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-brand-200 card-hover">
+                    <div class="w-14 h-14 bg-brand-100 rounded-xl flex items-center justify-center mb-6 text-brand-600 text-2xl">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Interaktiv video darslar</h3>
+                    <p class="text-slate-600">Video darsliklar, qayta ko'rish uchun kontent va LMS platformalar uchun mos formatlar.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-brand-200 card-hover">
+                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 text-purple-600 text-2xl">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Animatsion tushuntirish</h3>
+                    <p class="text-slate-600">Murakkab mavzularni 2D va Motion animatsiya orqali sodda va qiziqarli tushuntirish.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-brand-200 card-hover">
+                    <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6 text-green-600 text-2xl">
+                        <i class="fa-solid fa-vr-cardboard"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">VR/AR ta'limiy kontent</h3>
+                    <p class="text-slate-600">Virtual muhitda xavfsiz tajribalar va obyektlarni 360° o'rganish imkoniyati.</p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-brand-200 card-hover">
+                    <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-6 text-orange-600 text-2xl">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">O'qituvchi uchun studiya</h3>
+                    <p class="text-slate-600">Professional kamera, yorug'lik, mikrofon va montaj xizmati bilan o'qituvchi - kontent meyker.</p>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-brand-200 card-hover">
+                    <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center mb-6 text-red-600 text-2xl">
+                        <i class="fa-solid fa-file-powerpoint"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Interaktiv prezentatsiyalar</h3>
+                    <p class="text-slate-600">Bosiladigan elementlar, video/audio integratsiyasi va UX dizayn asosidagi taqdimotlar.</p>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-brand-200 card-hover flex flex-col justify-center items-center text-center">
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Batafsil ma'lumot kerakmi?</h3>
+                    <p class="text-slate-600 mb-6">Barcha xizmatlar ro'yxatini yuklab oling yoki biz bilan bog'laning.</p>
+                    <a href="#aloqa" class="text-brand-600 font-bold hover:text-brand-700 flex items-center">
+                        Telegram orqali yozish <i class="fa-brands fa-telegram ml-2 text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Detailed (Xizmatlar) -->
+    <section id="xizmatlar" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-slate-900 sm:text-4xl">Xizmat turlari</h2>
+                <p class="mt-4 text-xl text-slate-500">Sizga mos keladigan yechimni tanlang</p>
+            </div>
+
+            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Service 1 -->
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition duration-300 overflow-hidden border border-slate-100">
+                    <div class="h-48 bg-slate-200 relative">
+                        <!-- Rasm o'rni: Video darslik -->
+                        <img src="{{ url_for('static', filename='studio2.jpg') }}" class="w-full h-full object-cover" alt="Video dars">
+                        <div class="absolute top-4 right-4 bg-white/90 px-3 py-1 rounded text-xs font-bold text-slate-800">Top Tanlov</div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Interaktiv video darsliklar</h3>
+                        <p class="text-slate-600 text-sm mb-4 h-10">O'quvchi darsni qayta-qayta ko'rib tushunishi uchun mukammal yechim.</p>
+                        <ul class="space-y-2 mb-6 text-sm text-slate-600">
+                            <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i> Professional montaj va ovoz</li>
+                            <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i> Grafika va sarlavhalar</li>
+                            <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i> LMS uchun tayyor format</li>
+                        </ul>
+                        <a href="#aloqa" class="block w-full text-center border-2 border-brand-500 text-brand-600 font-bold py-2 rounded-lg hover:bg-brand-50 transition">Taklif olish</a>
+                    </div>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition duration-300 overflow-hidden border border-slate-100">
+                    <div class="h-48 bg-slate-200 relative">
+                         <!-- Rasm o'rni: Motion Grafika -->
+                        <img src="{{ url_for('static', filename='visual.png') }}" class="w-full h-full object-cover" alt="Motion Grafika">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Motion/Animatsion videolar</h3>
+                        <p class="text-slate-600 text-sm mb-4 h-10">Fizika, kimyo va biologiya kabi fanlardagi jarayonlarni vizuallashtirish.</p>
+                        <ul class="space-y-2 mb-6 text-sm text-slate-600">
+                            <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i> 2D va Motion dizayn</li>
+                            <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i> Ssenariy yozish</li>
+                            <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i> Ovoz berish (Dublyaj)</li>
+                        </ul>
+                        <a href="#aloqa" class="block w-full text-center border-2 border-brand-500 text-brand-600 font-bold py-2 rounded-lg hover:bg-brand-50 transition">Taklif olish</a>
+                    </div>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition duration-300 overflow-hidden border border-slate-100">
+                    <div class="h-48 bg-slate-200 relative">
+                         <!-- Rasm o'rni: O'qituvchi studiyada -->
+                        <img src="{{ url_for('static', filename='studio3.jpg') }}" class="w-full h-full object-cover" alt="Studio Rent">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Video-studiya xizmati</h3>
+                        <p class="text-slate-600 text-sm mb-4 h-10">O'qituvchilaringiz kelib, o'z kontentlarini professional yozib ketishlari mumkin.</p>
+                        <ul class="space-y-2 mb-6 text-sm text-slate-600">
+                            <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i> Green Screen / Oq fon</li>
+                            <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i> Teleprompter yordami</li>
+                            <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mt-1 mr-2"></i> Operator xizmati</li>
+                        </ul>
+                        <a href="#aloqa" class="block w-full text-center border-2 border-brand-500 text-brand-600 font-bold py-2 rounded-lg hover:bg-brand-50 transition">Taklif olish</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why DATA? (Differensiya) -->
+    <section class="py-20 bg-slate-900 text-white overflow-hidden relative">
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-brand-600 rounded-full blur-3xl opacity-20"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-purple-600 rounded-full blur-3xl opacity-20"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold sm:text-4xl">Nega aynan DATA?</h2>
+                <p class="mt-4 text-xl text-slate-400">Oddiy video emas, ta'limni kuchaytiradigan tizim</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Left: Problems -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-red-400 mb-6">Ko'pchilikda uchraydigan muammolar:</h3>
+
+                    <div class="flex items-start p-4 bg-slate-800/50 rounded-xl border border-red-900/30">
+                        <i class="fa-solid fa-circle-xmark text-red-500 mt-1 mr-4 text-xl"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-200">Kontent metodikasiz</h4>
+                            <p class="text-slate-400 text-sm">Shunchaki chiroyli rasm, lekin o'quvchi tushunishiga foydasi kam.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start p-4 bg-slate-800/50 rounded-xl border border-red-900/30">
+                        <i class="fa-solid fa-circle-xmark text-red-500 mt-1 mr-4 text-xl"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-200">Video faqat ko'rinish uchun</h4>
+                            <p class="text-slate-400 text-sm">Baholash va dars jarayoniga integratsiya qilinmagan.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start p-4 bg-slate-800/50 rounded-xl border border-red-900/30">
+                        <i class="fa-solid fa-circle-xmark text-red-500 mt-1 mr-4 text-xl"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-200">Tasodifiy dizayn</h4>
+                            <p class="text-slate-400 text-sm">Bolalar psixologiyasi va yosh xususiyatlari inobatga olinmagan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Solutions (DATA) -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-brand-400 mb-6">DATA Interaktiv Studiyasida:</h3>
+
+                    <div class="flex items-start p-4 bg-brand-900/20 rounded-xl border border-brand-500/30 shadow-lg shadow-brand-500/10">
+                        <i class="fa-solid fa-circle-check text-brand-400 mt-1 mr-4 text-xl"></i>
+                        <div>
+                            <h4 class="font-bold text-white">Metodika + Ssenariy + Natija</h4>
+                            <p class="text-slate-300 text-sm">Har bir video aniq o'quv maqsadiga (Learning Objective) qaratilgan.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start p-4 bg-brand-900/20 rounded-xl border border-brand-500/30 shadow-lg shadow-brand-500/10">
+                        <i class="fa-solid fa-circle-check text-brand-400 mt-1 mr-4 text-xl"></i>
+                        <div>
+                            <h4 class="font-bold text-white">Qayta foydalanish tizimi</h4>
+                            <p class="text-slate-300 text-sm">Video darslar o'qituvchi vaqtini tejaydi va yillar davomida xizmat qiladi.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start p-4 bg-brand-900/20 rounded-xl border border-brand-500/30 shadow-lg shadow-brand-500/10">
+                        <i class="fa-solid fa-circle-check text-brand-400 mt-1 mr-4 text-xl"></i>
+                        <div>
+                            <h4 class="font-bold text-white">Yoshga mos vizual til</h4>
+                            <p class="text-slate-300 text-sm">Boshlang'ich sinf uchun yorqin, yuqori sinf uchun akademik uslub.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process (Jarayon) -->
+    <section id="jarayon" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-slate-900">Ishlash jarayoni 5 qadamda</h2>
+            </div>
+
+            <div class="relative">
+                <!-- Line for desktop -->
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-slate-200 -translate-y-1/2 z-0"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-8 relative z-10">
+                    <!-- Step 1 -->
+                    <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-lg text-center transform hover:-translate-y-2 transition duration-300">
+                        <div class="w-12 h-12 bg-brand-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4 ring-4 ring-white">1</div>
+                        <h4 class="font-bold text-lg mb-2">Brif + Maqsad</h4>
+                        <p class="text-sm text-slate-500">Fan, sinf va formatni aniqlab olamiz.</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-lg text-center transform hover:-translate-y-2 transition duration-300">
+                        <div class="w-12 h-12 bg-brand-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4 ring-4 ring-white">2</div>
+                        <h4 class="font-bold text-lg mb-2">Ssenariy</h4>
+                        <p class="text-sm text-slate-500">Metodik tekshiruv va vizual struktura.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-lg text-center transform hover:-translate-y-2 transition duration-300">
+                        <div class="w-12 h-12 bg-brand-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4 ring-4 ring-white">3</div>
+                        <h4 class="font-bold text-lg mb-2">Suratga olish</h4>
+                        <p class="text-sm text-slate-500">Studiya yoki masofaviy dizayn ishlari.</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-lg text-center transform hover:-translate-y-2 transition duration-300">
+                        <div class="w-12 h-12 bg-brand-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4 ring-4 ring-white">4</div>
+                        <h4 class="font-bold text-lg mb-2">Montaj</h4>
+                        <p class="text-sm text-slate-500">Animatsiya, subtitr va grafika qo'shish.</p>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-lg text-center transform hover:-translate-y-2 transition duration-300">
+                        <div class="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4 ring-4 ring-white"><i class="fa-solid fa-check"></i></div>
+                        <h4 class="font-bold text-lg mb-2">Topshirish</h4>
+                        <p class="text-sm text-slate-500">LMS yoki Telegram uchun tayyor format.</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-12">
+                    <a href="#aloqa" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 md:py-4 md:text-lg md:px-10 shadow-lg shadow-brand-500/40 transition">
+                        Brif to'ldirish
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-extrabold text-slate-900">Real ishlardan namunalar</h2>
+                <!-- Filter buttons removed per request -->
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Portfolio Video 1 -->
+                <div class="rounded-xl overflow-hidden shadow-md bg-black">
+                    <div class="relative w-full pt-[56.25%]">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/CxplBmnAxHo" title="Video 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Portfolio Video 2 -->
+                <div class="rounded-xl overflow-hidden shadow-md bg-black">
+                    <div class="relative w-full pt-[56.25%]">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/qEeJYR4FEwE" title="Video 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Portfolio Video 3 -->
+                <div class="rounded-xl overflow-hidden shadow-md bg-black">
+                    <div class="relative w-full pt-[56.25%]">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/8JifXdO9IOw" title="Video 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Portfolio Video 4 -->
+                <div class="rounded-xl overflow-hidden shadow-md bg-black">
+                    <div class="relative w-full pt-[56.25%]">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/vE6M85HUIEc" title="Video 4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+             <div class="text-center mt-10">
+                <a href="#" class="text-brand-600 font-bold hover:text-brand-800 transition">Portfelni to'liq ko'rish <i class="fa-solid fa-arrow-right ml-1"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing (Narxlar) -->
+    <section id="narxlar" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-slate-900">Narxlar va Paketlar</h2>
+                <p class="mt-4 text-xl text-slate-500">Loyiha hajmidan kelib chiqib eng maqbul yechim</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Plan: Start -->
+                <div class="border border-slate-200 rounded-2xl p-8 hover:shadow-xl transition relative bg-white">
+                    <h3 class="text-2xl font-extrabold text-slate-900">Start</h3>
+                    <p class="text-slate-500 text-sm mt-2 mb-6">Yakka tartibdagi o'qituvchilar uchun</p>
+                    <div class="text-2xl font-bold text-slate-900 mb-6">Kelishilgan <span class="text-sm font-normal text-slate-500">/ loyiha</span></div>
+
+                    <ul class="space-y-4 mb-8 text-sm text-slate-600">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-3"></i> 1 ta mavzu / video</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-3"></i> Studiyada tasvirga olish</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-3"></i> Oddiy montaj</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-3"></i> 3 kungacha muddat</li>
+                    </ul>
+                    <a href="#aloqa" class="block w-full py-3 px-6 text-center rounded-lg border-2 border-brand-500 text-brand-600 font-bold hover:bg-brand-50 transition">Tanlash</a>
+                </div>
+
+                <!-- Plan: Pro -->
+                <div class="border-2 border-brand-500 rounded-2xl p-8 shadow-xl transform scale-105 relative bg-white z-10">
+                    <div class="absolute top-0 right-0 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">OMMABOP</div>
+                    <h3 class="text-2xl font-extrabold text-slate-900">Pro</h3>
+                    <p class="text-slate-500 text-sm mt-2 mb-6">Kurs mualliflari uchun</p>
+                    <div class="text-2xl font-bold text-slate-900 mb-6">Paket <span class="text-sm font-normal text-slate-500">/ modul</span></div>
+
+                    <ul class="space-y-4 mb-8 text-sm text-slate-600">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-500 mr-3"></i> Modul paketi (5+ video)</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-500 mr-3"></i> Animatsiya va Motion grafika</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-500 mr-3"></i> Ssenariy yozish yordami</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-brand-500 mr-3"></i> LMS ga moslash</li>
+                    </ul>
+                    <a href="#aloqa" class="block w-full py-3 px-6 text-center rounded-lg bg-brand-600 text-white font-bold hover:bg-brand-700 transition shadow-lg shadow-brand-500/30">Tanlash</a>
+                </div>
+
+                <!-- Plan: School -->
+                <div class="border border-slate-200 rounded-2xl p-8 hover:shadow-xl transition relative bg-white">
+                    <h3 class="text-2xl font-extrabold text-slate-900">School</h3>
+                    <p class="text-slate-500 text-sm mt-2 mb-6">Maktab va O'quv markazlar</p>
+                    <div class="text-2xl font-bold text-slate-900 mb-6">Abonent <span class="text-sm font-normal text-slate-500">/ oyiga</span></div>
+
+                    <ul class="space-y-4 mb-8 text-sm text-slate-600">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-3"></i> Doimiy kontent ishlab chiqarish</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-3"></i> O'qituvchilarni o'qitish</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-3"></i> VR/AR kontentlar</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-3"></i> Brand promo videolar</li>
+                    </ul>
+                    <a href="#aloqa" class="block w-full py-3 px-6 text-center rounded-lg border-2 border-brand-500 text-brand-600 font-bold hover:bg-brand-50 transition">Tanlash</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-20 bg-slate-50">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-extrabold text-slate-900">Ko'p beriladigan savollar</h2>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Question 1 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left font-bold text-slate-800 flex justify-between items-center focus:outline-none" onclick="toggleFaq(this)">
+                        <span>Qaysi fanlar bo'yicha ishlaysiz?</span>
+                        <i class="fa-solid fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 pb-4 text-slate-600 text-sm border-t border-slate-100 mt-2 pt-2">
+                        Biz barcha fanlar bo'yicha ishlaymiz. Ayniqsa, fizika, kimyo, biologiya, matematika va IT sohalarida vizualizatsiya juda kuchli samara beradi.
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left font-bold text-slate-800 flex justify-between items-center focus:outline-none" onclick="toggleFaq(this)">
+                        <span>Dars ssenariysini kim yozadi?</span>
+                        <i class="fa-solid fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 pb-4 text-slate-600 text-sm border-t border-slate-100 mt-2 pt-2">
+                        Odatda o'qituvchi asosiy mavzuni beradi, biz esa uni "ssenariy" ko'rinishiga keltiramiz. Agar sizda tayyor ssenariy bo'lmasa, metodistlarimiz yordam beradi.
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left font-bold text-slate-800 flex justify-between items-center focus:outline-none" onclick="toggleFaq(this)">
+                        <span>1 ta video qancha kunda tayyor bo'ladi?</span>
+                        <i class="fa-solid fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 pb-4 text-slate-600 text-sm border-t border-slate-100 mt-2 pt-2">
+                        Oddiy video darslar 1-2 kunda, murakkab animatsion roliklar 3-5 kunda tayyor bo'ladi.
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left font-bold text-slate-800 flex justify-between items-center focus:outline-none" onclick="toggleFaq(this)">
+                        <span>Kontentni LMS'ga moslab berasizmi?</span>
+                        <i class="fa-solid fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 pb-4 text-slate-600 text-sm border-t border-slate-100 mt-2 pt-2">
+                        Ha, albatta. Biz videolarni kerakli formatda (mp4, scorm) va hajmda optimallashtirib beramiz.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Footer -->
+    <section id="aloqa" class="bg-slate-900 pt-20 pb-10 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16">
+
+                <!-- Contact Info -->
+                <div>
+                    <h2 class="text-3xl font-extrabold mb-6">Loyihangizni ayting,<br> <span class="text-brand-400">24 soat ichida</span> yechim beramiz</h2>
+                    <p class="text-slate-400 mb-10">Biz bilan bog'laning va ta'lim sifatini yangi bosqichga olib chiqing.</p>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center text-brand-400 text-xl mr-4">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Telefon</h4>
+                                <p class="text-slate-400">+998 90 123 45 67</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center text-brand-400 text-xl mr-4">
+                                <i class="fa-brands fa-telegram"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Telegram</h4>
+                                <p class="text-slate-400">@data_studio_admin</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center text-brand-400 text-xl mr-4">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg">Manzil</h4>
+                                <p class="text-slate-400">Toshkent sh., IT Park mavzesi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="bg-white rounded-2xl p-8 text-slate-800">
+                    {% if submitted %}
+                    <div class="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-green-700">
+                        So'rovingiz yuborildi! Tez orada aloqaga chiqamiz.
+                    </div>
+                    {% endif %}
+                    {% if errors %}
+                    <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+                        <p class="font-semibold mb-2">Formani tekshiring:</p>
+                        <ul class="list-disc pl-5 space-y-1 text-sm">
+                            {% for error in errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    <form action="{{ url_for('contact') }}" method="post">
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold mb-2">Ism yoki Tashkilot</label>
+                            <input name="name" type="text" class="w-full px-4 py-3 rounded-lg bg-slate-100 border-transparent focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none transition" placeholder="Ismingizni kiriting" value="{{ form_data.get('name', '') }}" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold mb-2">Telefon raqam</label>
+                            <input name="phone" type="tel" class="w-full px-4 py-3 rounded-lg bg-slate-100 border-transparent focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none transition" placeholder="+998 -- --- -- --" value="{{ form_data.get('phone', '') }}" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold mb-2">Xizmat turi</label>
+                            <select name="service" class="w-full px-4 py-3 rounded-lg bg-slate-100 border-transparent focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none transition">
+                                <option {% if form_data.get('service') == 'Video darslar' %}selected{% endif %}>Video darslar</option>
+                                <option {% if form_data.get('service') == 'Animatsiya / Motion' %}selected{% endif %}>Animatsiya / Motion</option>
+                                <option {% if form_data.get('service') == 'VR/AR Kontent' %}selected{% endif %}>VR/AR Kontent</option>
+                                <option {% if form_data.get('service') == 'Studiya ijarasi' %}selected{% endif %}>Studiya ijarasi</option>
+                                <option {% if form_data.get('service') == 'Boshqa' %}selected{% endif %}>Boshqa</option>
+                            </select>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold mb-2">Qisqacha izoh</label>
+                            <textarea name="message" class="w-full px-4 py-3 rounded-lg bg-slate-100 border-transparent focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none transition h-24" placeholder="Qanday loyiha qilmoqchisiz?">{{ form_data.get('message', '') }}</textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-lg shadow-lg shadow-brand-500/30 transition">
+                            Yuborish
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0 text-slate-500 text-sm">
+                    &copy; 2024 DATA Interaktiv Studiyasi. Barcha huquqlar himoyalangan.
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-slate-400 hover:text-white transition"><i class="fa-brands fa-instagram text-xl"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-white transition"><i class="fa-brands fa-youtube text-xl"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-white transition"><i class="fa-brands fa-facebook text-xl"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JS for Interactive Elements -->
+    <script>
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // FAQ Toggle
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+                button.classList.add('text-brand-600');
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+                button.classList.remove('text-brand-600');
+            }
+        }
+    </script>
+</body>
+</html>

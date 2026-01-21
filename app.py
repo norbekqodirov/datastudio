@@ -13,6 +13,7 @@ app = Flask(__name__, static_folder="img", static_url_path="/img")
 
 DATA_DIR = Path("data")
 SUBMISSIONS_PATH = DATA_DIR / "requests.jsonl"
+SHEETS_FAILURES_PATH = DATA_DIR / "sheets_failures.log"
 SHEETS_WEBHOOK_URL = (
     os.environ.get("SHEETS_WEBHOOK_URL", "").strip()
     or "https://script.google.com/macros/s/AKfycbwwBcsesn-Z8I6hohmGZvGIbg4QiA3HaZU3y7HlCuX2YNjT32W1BQUx-ZCsa-6RZm4mlw/exec"
@@ -38,14 +39,36 @@ def _wants_json() -> bool:
     )
 
 
-def _send_to_sheets(payload: dict[str, str]) -> None:
+def _send_to_sheets(payload: dict[str, str]) -> tuple[bool, str]:
     if not SHEETS_WEBHOOK_URL:
-        return
+        return True, ""
     try:
-        requests.post(SHEETS_WEBHOOK_URL, json=payload, timeout=10)
+        response = requests.post(SHEETS_WEBHOOK_URL, json=payload, timeout=10)
     except requests.RequestException:
-        # Silent fallback to local storage if webhook fails.
-        pass
+        return False, "Google Sheets bilan bog'lanishda xatolik yuz berdi."
+
+    if response.status_code >= 400:
+        return False, f"Google Sheets xatosi: HTTP {response.status_code}."
+
+    try:
+        data = response.json()
+    except ValueError:
+        return False, "Google Sheets javobi tushunarsiz."
+
+    ok = data.get("ok") is True or data.get("status") == "ok"
+    if not ok:
+        message = data.get("message") or data.get("error") or "Google Sheets javobida xatolik bor."
+        return False, str(message)
+
+    return True, ""
+
+
+def _log_sheets_failure(message: str) -> None:
+    if not message:
+        return
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with SHEETS_FAILURES_PATH.open("a", encoding="utf-8") as handle:
+        handle.write(f"{datetime.now(timezone.utc).isoformat()} {message}\n")
 
 
 @app.get("/")
@@ -87,9 +110,19 @@ def contact() -> str:
         "message": form_data["message"],
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
-    _send_to_sheets(payload)
+    sheets_ok, sheets_error = _send_to_sheets(payload)
     with SUBMISSIONS_PATH.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload, ensure_ascii=False) + "\n")
+
+    if not sheets_ok:
+        _log_sheets_failure(sheets_error)
+        errors = [
+            "So'rov qabul qilindi, lekin Google Sheets ga yozilmadi.",
+            sheets_error,
+        ]
+        if _wants_json():
+            return jsonify({"ok": False, "errors": errors}), 502
+        return render_template("index.html", submitted=False, errors=errors, form_data=form_data)
 
     if _wants_json():
         return jsonify({"ok": True})

@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, jsonify, redirect, render_template, request, url_for
 
 app = Flask(__name__, static_folder="img", static_url_path="/img")
 
@@ -15,7 +15,7 @@ DATA_DIR = Path("data")
 SUBMISSIONS_PATH = DATA_DIR / "requests.jsonl"
 SHEETS_WEBHOOK_URL = (
     os.environ.get("SHEETS_WEBHOOK_URL", "").strip()
-    or "https://script.google.com/macros/s/AKfycby9MsXmNsOPj-XyoJyTmfXX-umLHBCCZBZ-V4N-Ky02PbkigINMEVWu_c2f4kr3M9tEQQ/exec"
+    or "https://script.google.com/macros/s/AKfycbwwBcsesn-Z8I6hohmGZvGIbg4QiA3HaZU3y7HlCuX2YNjT32W1BQUx-ZCsa-6RZm4mlw/exec"
 )
 
 
@@ -30,6 +30,12 @@ def _is_valid_phone(value: str) -> bool:
     # Accepts +998 90 123 45 67, 901234567, or similar international formats.
     pattern = re.compile(r"^\+?\d[\d\s()\-]{7,}$")
     return bool(pattern.match(value))
+
+
+def _wants_json() -> bool:
+    return request.headers.get("X-Requested-With") == "fetch" or "application/json" in request.headers.get(
+        "Accept", ""
+    )
 
 
 def _send_to_sheets(payload: dict[str, str]) -> None:
@@ -69,12 +75,9 @@ def contact() -> str:
         errors.append("Telefon raqami noto'g'ri. Namuna: +998 90 123 45 67.")
 
     if errors:
-        return render_template(
-            "index.html",
-            submitted=False,
-            errors=errors,
-            form_data=form_data,
-        )
+        if _wants_json():
+            return jsonify({"ok": False, "errors": errors}), 400
+        return render_template("index.html", submitted=False, errors=errors, form_data=form_data)
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     payload = {
@@ -88,6 +91,8 @@ def contact() -> str:
     with SUBMISSIONS_PATH.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(payload, ensure_ascii=False) + "\n")
 
+    if _wants_json():
+        return jsonify({"ok": True})
     return redirect(url_for("index", submitted="1"))
 
 

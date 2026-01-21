@@ -651,7 +651,8 @@
                         </ul>
                     </div>
                     {% endif %}
-                    <form action="{{ url_for('contact') }}" method="post">
+                    <div id="form-feedback" class="hidden mb-6 rounded-lg border p-4 text-sm"></div>
+                    <form id="contact-form" action="{{ url_for('contact') }}" method="post">
                         <div class="mb-4">
                             <label class="block text-sm font-bold mb-2">Ism yoki Tashkilot</label>
                             <input name="name" type="text" class="w-full px-4 py-3 rounded-lg bg-slate-100 border-transparent focus:bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none transition" placeholder="Ismingizni kiriting" value="{{ form_data.get('name', '') }}" required>
@@ -703,6 +704,62 @@
         btn.addEventListener('click', () => {
             menu.classList.toggle('hidden');
         });
+
+        const contactForm = document.getElementById('contact-form');
+        const formFeedback = document.getElementById('form-feedback');
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                if (formFeedback) {
+                    formFeedback.classList.add('hidden');
+                    formFeedback.classList.remove('border-green-200', 'bg-green-50', 'text-green-700');
+                    formFeedback.classList.remove('border-red-200', 'bg-red-50', 'text-red-700');
+                    formFeedback.textContent = '';
+                }
+
+                try {
+                    const response = await fetch(contactForm.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'fetch',
+                            'Accept': 'application/json'
+                        },
+                        body: new FormData(contactForm)
+                    });
+
+                    const data = await response.json();
+                    if (!response.ok || !data.ok) {
+                        const errors = data.errors || ['So\'rov yuborilmadi. Qayta urinib ko\'ring.'];
+                        if (formFeedback) {
+                            formFeedback.classList.remove('hidden');
+                            formFeedback.classList.add('border-red-200', 'bg-red-50', 'text-red-700');
+                            formFeedback.innerHTML = '<p class="font-semibold mb-2">Formani tekshiring:</p><ul class="list-disc pl-5 space-y-1"></ul>';
+                            const list = formFeedback.querySelector('ul');
+                            errors.forEach((error) => {
+                                const item = document.createElement('li');
+                                item.textContent = error;
+                                list.appendChild(item);
+                            });
+                        }
+                        return;
+                    }
+
+                    if (formFeedback) {
+                        formFeedback.classList.remove('hidden');
+                        formFeedback.classList.add('border-green-200', 'bg-green-50', 'text-green-700');
+                        formFeedback.textContent = 'So\'rovingiz yuborildi! Tez orada aloqaga chiqamiz.';
+                    }
+                    contactForm.reset();
+                } catch (error) {
+                    if (formFeedback) {
+                        formFeedback.classList.remove('hidden');
+                        formFeedback.classList.add('border-red-200', 'bg-red-50', 'text-red-700');
+                        formFeedback.textContent = 'Server bilan bog\'lanishda xatolik. Qayta urinib ko\'ring.';
+                    }
+                }
+            });
+        }
 
         // FAQ Toggle
         function toggleFaq(button) {
